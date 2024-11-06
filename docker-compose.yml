@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+  rabbitmq:
+    image: 'rabbitmq:management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+  mongo:
+    image: 'mongo:latest'
+    ports:
+      - '27017:27017'
+    env_file:
+      - .env
+
+  app:
+    depends_on:
+      - redis
+      - rabbitmq
+      - mongo
+    image: 'app:latest'
+    ports:
+      - '5000:5000'
+    env_file: .env
+    command: >
+      sh -c "celery -A app.celery_scripts.celery_app worker --pool=solo --loglevel=info &
+             python app/main.py"
+
+
+networks:
+  default:
+    name: service_network
