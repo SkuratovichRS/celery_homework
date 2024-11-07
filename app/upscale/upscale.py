@@ -17,18 +17,3 @@ def upscale(image_bytes: bytes, scaler: dnn_superres.DnnSuperResImpl) -> bytes:
     result = scaler.upsample(image)
     ndarray = cv2.imencode(".png", result)[1]
     return ndarray.tobytes()
-
-
-def example():
-    image = cv2.imread("lama_300px.png")
-    success, encoded_image = cv2.imencode('.png', image)
-    if success:
-        bts = encoded_image.tobytes() 
-    else:
-        raise ValueError("Failed to encode image")
-    
-    return upscale(bts, setup_scaler())
-
-
-if __name__ == "__main__":
-    print(example())

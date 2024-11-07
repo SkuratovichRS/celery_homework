@@ -7,7 +7,6 @@ def store_image(image: bytes, client: MongoClient) -> str:
     db = client["upscale"]
     fs = GridFS(db)
     image_id = fs.put(image)
-    print(image_id)
     return str(image_id)
 
 

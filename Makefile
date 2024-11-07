@@ -4,4 +4,5 @@ celery_run:
 app_build:
 	docker build -t app:latest .
 
-
+up_test_db:
+	docker compose up -d rabbitmq mongo redis

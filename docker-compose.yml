@@ -16,18 +16,26 @@ services:
     env_file:
       - .env
 
-  app:
+  celery:
     depends_on:
       - redis
       - rabbitmq
       - mongo
     image: 'app:latest'
     ports:
-      - '5000:5000'
+      - '8000:8000'
     env_file: .env
     command: >
-      sh -c "celery -A app.celery_scripts.celery_app worker --pool=solo --loglevel=info &
-             python app/main.py"
+      sh -c "celery -A app.celery_scripts.celery_app worker --pool=solo --loglevel=info"
+
+  api:
+    depends_on:
+      - celery
+    image: 'app:latest'
+    ports:
+      - '5000:5000'
+    env_file: .env
+    command: ["python", "app/main.py"]
 
 
 networks:

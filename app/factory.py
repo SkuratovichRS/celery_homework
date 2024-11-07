@@ -3,6 +3,7 @@ from celery import Celery
 from flask import Flask
 
 from app.settings import Settings
+from app.upscale.upscale import setup_scaler
 
 
 class Factory:
@@ -41,3 +42,8 @@ class Factory:
         if not self._singleton.get("mongo_client"):
             self._singleton["mongo_client"] = pymongo.MongoClient(self._settings.MONGO_URI)
         return self._singleton["mongo_client"]
+
+    def create_scaler(self):
+        if not self._singleton.get("scaler"):
+            self._singleton["scaler"] = setup_scaler()
+        return self._singleton["scaler"]
